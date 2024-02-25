@@ -11,7 +11,10 @@ count = 0
 for i in shop:
     if i > manager:
         i -= manager
-        count = round(i // member) + 1
+        if i >= member:
+            count += (i // member) + 2
+        else:
+            count += 2
     else:
         count += 1
 
