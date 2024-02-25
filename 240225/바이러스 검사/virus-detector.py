@@ -11,8 +11,8 @@ count = 0
 for i in shop:
     if i > manager:
         i -= manager
-        if i >= member:
-            count += (i // member) + 2
+        if i > member:
+            count += (i // member) + 1
         else:
             count += 2
     else:
