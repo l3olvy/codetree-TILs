@@ -13,7 +13,7 @@ distance = [INF] * (P + 1)
 score = [0] * (P + 1)
 # 산타 기절
 faint = [0] * (P + 1)
-
+# 게임 오버 산타
 die = []
 
 # 산타 : P_n
@@ -52,8 +52,8 @@ def santa_next_location(rudolf, s_r, s_c, i):
     dr = [-1, 0, 1, 0]
     dc = [0, 1, 0, -1]
     r_r, r_c = rudolf
-    min_value = int(1e9)
-    index = 0
+    min_value = math.pow(r_r - s_r, 2) + math.pow(r_c - s_c, 2)
+    index = 4
     for j in range(4):
         n_r = s_r + dr[j]
         n_c = s_c + dc[j]
@@ -68,8 +68,9 @@ def santa_next_location(rudolf, s_r, s_c, i):
             min_value = new_value
             index = j
 
-    s_r += dr[index]
-    s_c += dc[index]
+    if index != 4:
+        s_r += dr[index]
+        s_c += dc[index]
 
     # 산타랑 루돌프랑 충돌했다면
     if s_r == r_r and s_c == r_c:
@@ -98,7 +99,6 @@ def santa_next_location(rudolf, s_r, s_c, i):
                     die.append(j)
                 continue
             santa[j] = r + dr[index - 2], c + dc[index - 2]
-
     return s_r, s_c
 
 def move_santa(santa, rudolf):
@@ -171,8 +171,6 @@ def rudolf_next_location(rudolf, s_r, s_c):
                 r += dr[index]
                 c += dc[index]
 
-            santa[i] = s_r, s_c
-
             for j in si:
                 r, c = santa[j]
                 if r <= 0 or c <= 0 or r > N or c > N:
@@ -180,13 +178,14 @@ def rudolf_next_location(rudolf, s_r, s_c):
                         die.append(j)
                     continue
                 santa[j] = r + dr[index], c + dc[index]
+
+            santa[i] = s_r, s_c
             break
 
     return r_r, r_c
 
 def move_rudolf():
     global rudolf
-
     # 루돌프와 가장 가까운 산타 좌표 구하기
     s_r, s_c = get_shortest_index(rudolf, santa)
     # 루돌프의 다음 좌표 구하기
@@ -207,10 +206,12 @@ def play_game():
     living_santa(die)
     remove_faint(faint)
 
+
 for i in range(M):
     play_game()
     if len(die) == P:
         break
+
 
 for i in range(1, P + 1):
     print(score[i], end=' ')
