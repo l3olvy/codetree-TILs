@@ -178,7 +178,10 @@ def rudolf_next_location(rudolf, s_r, s_c):
             r, c = s_r, s_c
             si = []
             while (r, c) in santa:
-                si.append(santa.index((r, c)))
+                ind = santa.index((r, c))
+                if ind == i:
+                    break
+                si.append(ind)
                 r += dr[index]
                 c += dc[index]
 
