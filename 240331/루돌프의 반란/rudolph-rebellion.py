@@ -52,6 +52,8 @@ def santa_next_location(rudolf, s_r, s_c, i):
     dr = [-1, 0, 1, 0]
     dc = [0, 1, 0, -1]
     r_r, r_c = rudolf
+    r = 0
+    c = 0
     min_value = math.pow(r_r - s_r, 2) + math.pow(r_c - s_c, 2)
     index = 4
     for j in range(4):
@@ -86,12 +88,16 @@ def santa_next_location(rudolf, s_r, s_c, i):
         # 산타가 밖으로 튕겨져 나갔다면
         if s_r <= 0 or s_c <= 0 or s_r > N or s_c > N:
             die.append(i)
+            return s_r, s_c
         # 밀린 자리에 다른 산타가 있다면
         r = s_r
         c = s_c
         si = []
         while (r, c) in santa:
-            si.append(santa.index((r, c)))
+            ind = santa.index((r, c))
+            if ind == i:
+                break
+            si.append(ind)
             r += dr[index - 2]
             c += dc[index - 2]
 
