@@ -96,7 +96,7 @@ def santa_next_location(rudolf, s_r, s_c, i):
         while (r, c) in santa:
             ind = santa.index((r, c))
             if ind == i:
-                continue
+                break
             si.append(ind)
             r += dr[index - 2]
             c += dc[index - 2]
@@ -108,7 +108,6 @@ def santa_next_location(rudolf, s_r, s_c, i):
             if r <= 0 or c <= 0 or r > N or c > N:
                 if j not in die:
                     die.append(j)
-                continue
 
     return s_r, s_c
 
@@ -180,7 +179,7 @@ def rudolf_next_location(rudolf, s_r, s_c):
             while (r, c) in santa:
                 ind = santa.index((r, c))
                 if ind == i:
-                    continue
+                    break
                 si.append(ind)
                 r += dr[index]
                 c += dc[index]
