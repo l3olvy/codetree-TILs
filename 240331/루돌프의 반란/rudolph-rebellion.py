@@ -186,7 +186,7 @@ def rudolf_next_location(rudolf, s_r, s_c):
                 c += dc[index]
 
             for j in si:
-                santa[j] = r + dr[index], c + dc[index]
+                santa[j] = santa[j][0] + dr[index], santa[j][1] + dc[index]
                 r, c = santa[j]
                 if r <= 0 or c <= 0 or r > N or c > N:
                     if j not in die:
