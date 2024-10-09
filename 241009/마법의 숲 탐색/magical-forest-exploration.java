@@ -27,6 +27,7 @@ public class Main {
 			c = Integer.parseInt(st.nextToken());
 			d = Integer.parseInt(st.nextToken());
 			stop = false;
+
 			while (true) {
 				if (!goDown()) {
 					if (!turnLeft()) {
@@ -37,7 +38,7 @@ public class Main {
 					}
 				}
 				if (stop) {
-					// 골렘의 몸의 일부가 숲을 벗어나면 map, dp, depth 초기화
+					// 골렘의 몸의 일부가 숲을 벗어나면 map, dp 초기화
 					if (r  <= 3) {
 						for (int x = 0; x < R + 3; x++) {
 							Arrays.fill(map[x], 0);
@@ -53,7 +54,6 @@ public class Main {
 							if (j == d) map[r + dr[j]][c + dc[j]] = i * -1;
 							else map[r + dr[j]][c + dc[j]] = i;
 						}
-						// 정령이 갈 수 있는 가장 깊은 곳 탐색
 						depth = moveFairy();
 						dp[i] = depth;
 						result += depth;
@@ -156,6 +156,22 @@ public class Main {
 			}
 		}
 		
+		for (int i = 0; i < 4; i++) {
+			int nr = r + dr[i] * 2;
+			int nc = c + dc[i] * 2;
+			int nnr = i < 3 ? r + dr[i] + dr[i + 1] : r + dr[0] + dr[3];
+			int nnc = i < 3 ? c + dc[i] + dc[i + 1] : c + dc[0] + dc[3];
+			
+			// map 범위를 벗어나면 pass
+			if (nr > R + 2 || nc > C || nnr > R + 2 || nnc > C) continue;
+			
+			if (map[nr][nc] < 0) {
+				dp[Math.abs(map[nr][nc])] = Math.max(dp[Math.abs(map[nr][nc])], depth);
+			}
+			if (map[nnr][nnc] < 0) {
+				dp[Math.abs(map[nnr][nnc])] = Math.max(dp[Math.abs(map[nnr][nnc])], depth);
+			}
+		}
 		return depth;
 	}
 }
