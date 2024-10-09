@@ -152,7 +152,7 @@ public class Main {
 			if (nr > R + 2 || nc > C) continue;
 			// 다른 골렘과 연결되어 있으면 현재 깊이와 다른 골렘으로 이동했을 때의 깊이 비교해서 더 깊은 값 찾음
 			if (Math.abs(map[nr][nc]) > 0) {
-				depth = Math.max(depth, dp[map[nr][nc]]);
+				depth = Math.max(depth, dp[Math.abs(map[nr][nc])]);
 				break;
 			}
 		}
