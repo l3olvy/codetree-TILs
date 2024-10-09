@@ -2,12 +2,20 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	
 	static int R, C, K, map[][], r, c, d, dp[], result;
 	// 상, 우, 하, 좌
 	static int dr[] = {-1, 0, 1, 0};
 	static int dc[] = {0, 1, 0, -1};
 	static boolean stop;
+	
+	public static class Node {
+		int x, y;
+		
+		public Node(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -134,44 +142,41 @@ public class Main {
 		return false;
 	}
 	
+	// bfs로 이동할 수 있는 최대 깊이 탐색
 	public static int moveFairy() {
-		// 다른 골렘으로 이동할 수 없는 경우의 최대 깊이
-		int depth = r - 1;
+//		// 다른 골렘으로 이동할 수 없는 경우의 최대 깊이
+//		int depth = r - 1; 
+		boolean[][] visited = new boolean[R + 3][C + 1];
+		Queue<Node> q = new LinkedList<Node>();
+		int depth = 0;
 		
-		// 출구 좌표
-		int er = r + dr[d];
-		int ec = c + dc[d];
+		visited[r][c] = true;
+		q.add(new Node(r, c));
 		
-		for (int i = 0; i < 4; i++) {
-			int nr = er + dr[i];
-			int nc = ec + dc[i];
-			
-			// 정령 있는 곳이면 pass
-			if (nr == r && nc == c) continue;
-			// map 범위를 벗어나면 pass
-			if (nr > R + 2 || nc > C) continue;
-			// 다른 골렘과 연결되어 있으면 현재 깊이와 다른 골렘으로 이동했을 때의 깊이 비교해서 더 깊은 값 찾음
-			if (Math.abs(map[nr][nc]) > 0) {
-				depth = Math.max(depth, dp[Math.abs(map[nr][nc])]);
+		while (!q.isEmpty()) {
+			Node n = q.poll();
+			depth = Math.max(depth, n.x);
+			for (int i = 0; i < 4; i++) {
+				int nr = n.x + dr[i];
+				int nc = n.y + dc[i];
+				// map 범위를 벗어나면 pass
+				if (nr < 3 || nr > R + 2 || nc < 1 || nc > C) continue;
+				// 빈 칸이면 pass
+				if (map[nr][nc] == 0) continue;
+				if (!visited[nr][nc]) {
+					if (Math.abs(map[nr][nc]) == Math.abs(map[n.x][n.y])) {
+						visited[nr][nc] = true;
+						q.add(new Node(nr, nc));
+					}
+					
+					if (map[n.x][n.y] < 0) {
+						visited[nr][nc] = true;
+						q.add(new Node(nr, nc));
+					}
+				}
 			}
 		}
 		
-		for (int i = 0; i < 4; i++) {
-			int nr = r + dr[i] * 2;
-			int nc = c + dc[i] * 2;
-			int nnr = i < 3 ? r + dr[i] + dr[i + 1] : r + dr[0] + dr[3];
-			int nnc = i < 3 ? c + dc[i] + dc[i + 1] : c + dc[0] + dc[3];
-			
-			// map 범위를 벗어나면 pass
-			if (nr > R + 2 || nc > C || nnr > R + 2 || nnc > C) continue;
-			
-			if (map[nr][nc] < 0) {
-				dp[Math.abs(map[nr][nc])] = Math.max(dp[Math.abs(map[nr][nc])], depth);
-			}
-			if (map[nnr][nnc] < 0) {
-				dp[Math.abs(map[nnr][nnc])] = Math.max(dp[Math.abs(map[nnr][nnc])], depth);
-			}
-		}
-		return depth;
+		return depth - 2;
 	}
 }
