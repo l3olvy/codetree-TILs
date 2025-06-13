@@ -191,7 +191,7 @@ public class Main {
             f1: for (int r = 0; r < N; r++) {
                 f2: for (int c = 0; c < N; c++) {
                     if (newMap[r][c] == 0) {
-                        if (c + maxC - minC < N && r + maxR - minR < N) {
+                        if (c + maxC - minC + 1 <= N && r + maxR - minR + 1 <= N) {
                             startR = r;
                             startC = c;
                             break f1;
@@ -199,7 +199,7 @@ public class Main {
                         // else break f2;
                     }
                 }
-                if (r + maxR >= N) break;
+                if (r + maxR - minR + 1 > N) break;
             }
 
             // System.out.println("start: " + startR + ", " + startC);
