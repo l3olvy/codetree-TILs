@@ -201,7 +201,11 @@ public class Main {
                 }
                 if (r + maxR - minR + 1 > N) break;
             }
-            if (startR == -1 && startC == -1) continue;
+            if (startR == -1 && startC == -1) {
+
+                count[node.x] = 0;
+                continue;
+            }
             else {
                 // System.out.println("start: " + startR + ", " + startC);
                 for (int r = 0; r <= maxR - minR; r++) {
