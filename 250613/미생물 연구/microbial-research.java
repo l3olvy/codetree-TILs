@@ -186,8 +186,8 @@ public class Main {
 
             // System.out.println("math : " + minR + ", " + minC + ", " + maxR + ", " + maxC);
 
-            int startR = 0;
-            int startC = 0;
+            int startR = -1;
+            int startC = -1;
             f1: for (int r = 0; r < N; r++) {
                 f2: for (int c = 0; c < N; c++) {
                     if (newMap[r][c] == 0) {
@@ -201,15 +201,18 @@ public class Main {
                 }
                 if (r + maxR - minR + 1 > N) break;
             }
-
-            // System.out.println("start: " + startR + ", " + startC);
-            for (int r = 0; r <= maxR - minR; r++) {
-                for (int c = 0; c <= maxC - minC; c++) {
-                    if (map[minR + r][minC + c] == node.x) {
-                        newMap[startR + r][startC + c] = node.x;
+            if (startR == -1 && startC == -1) continue;
+            else {
+                // System.out.println("start: " + startR + ", " + startC);
+                for (int r = 0; r <= maxR - minR; r++) {
+                    for (int c = 0; c <= maxC - minC; c++) {
+                        if (map[minR + r][minC + c] == node.x) {
+                            newMap[startR + r][startC + c] = node.x;
+                        }
                     }
                 }
             }
+            
         }
 
         return newMap;
