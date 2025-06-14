@@ -43,7 +43,6 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-
         N = Integer.parseInt(st.nextToken());
         Q = Integer.parseInt(st.nextToken());
         map = new int[N + 1][N + 1];
@@ -112,7 +111,6 @@ public class Main {
                             }
                         }
                     }
-
                     if (cnt != count[num]) {
                         deleteList.add(num);
                         count[num] = 0;
@@ -164,17 +162,16 @@ public class Main {
 
             f1: for (int r = 0; r < N; r++) {
                 f2: for (int c = 0; c < N; c++) {
-                    if (newMap[r][c] == 0) {
                         int[][] copyMap = new int[N + 1][N + 1];
                         for (int i = 0; i <= N; i++) {
                             System.arraycopy(newMap[i], 0, copyMap[i], 0, N + 1);
                         }
                         boolean end = true;
-                        for (int i = 0; i <= maxR - minR; i++) {
+                        hello: for (int i = 0; i <= maxR - minR; i++) {
                             for (int j = 0; j <= maxC - minC; j++) {
                                 if (r + i >= N || c + j >= N) {
                                     end = false;
-                                    break;
+                                    break hello;
                                 }
                                 if (map[minR + i][minC + j] == node.x) {
                                     if (copyMap[r + i][c + j] == 0) {
@@ -182,9 +179,8 @@ public class Main {
                                     }
                                     else {
                                         end = false;
-                                        break;
+                                        break hello;
                                     }
-
                                 }
                             }
                         }
@@ -192,7 +188,6 @@ public class Main {
                             newMap = copyMap;
                             break f1;
                         }
-                    }
                 }
             }
         }
@@ -244,7 +239,6 @@ public class Main {
 
         while (iterator.hasNext()) {
             Node element = iterator.next();
-
             result += count[element.x] * count[element.y];
         }
         sb.append(result + "\n");
