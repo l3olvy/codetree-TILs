@@ -229,7 +229,7 @@ public class Main {
                         // else break f2;
                     }
                 }
-                if (r + maxR - minR + 1 > N) break;
+                if (r + maxR - minR + 1 >= N) break;
             }
             if (startR == -1 && startC == -1) {
 
