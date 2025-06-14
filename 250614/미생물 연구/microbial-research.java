@@ -2,11 +2,11 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    
+
     static int N, Q, map[][], count[];
     // 상, 하, 좌, 우
     static int dx[] = {-1, 1, 0, 0};
-    static int dy[] = {0, 0, -1, 1}; 
+    static int dy[] = {0, 0, -1, 1};
     static StringBuffer sb = new StringBuffer();
 
     public static class Node implements Comparable<Node> {
@@ -26,27 +26,27 @@ public class Main {
         }
 
         @Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (!(o instanceof Node)) return false;
-			Node node = (Node) o;
-			return x == node.x && y == node.y;
-		}
-		
-		@Override
-		public int hashCode() {
-			return 31 * x + y;
-		}
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Node)) return false;
+            Node node = (Node) o;
+            return x == node.x && y == node.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * x + y;
+        }
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        
+
 
         N = Integer.parseInt(st.nextToken());
         Q = Integer.parseInt(st.nextToken());
-        map = new int[N][N];
+        map = new int[N + 1][N + 1];
         count = new int[Q + 1];
 
         for (int q = 1; q <= Q; q++) {
@@ -57,22 +57,11 @@ public class Main {
             int c2 = Integer.parseInt(st.nextToken());
             putMicro(r1, c1, r2, c2, q);
             map = moveMicro();
-            // System.out.println("===after putMicro===");
-            // debuging();
             recordResult();
 
-            
+
         }
         System.out.print(sb.toString());
-    }
-
-    public static void debuging() {
-        for (int r = 0; r < N; r++) {
-            for (int c = 0; c < N; c++) {
-                System.out.print(map[r][c] + " ");
-            }
-            System.out.println();
-        }
     }
 
     public static void putMicro(int r1, int c1, int r2, int c2, int order) {
@@ -101,12 +90,8 @@ public class Main {
         for (int r = tempR1; r < tempR2; r++) {
             for (int c = tempC1; c < tempC2; c++) {
                 int num = map[r][c];
-                // for (int m = 0; m < deleteList.size(); m++) {
-                //     System.out.println("deleteList");
-                //     System.out.println(deleteList.get(m));
-                // }
                 if (num != 0 && list.contains(num) && !deleteList.contains(num)) {
-                    
+
                     ArrayDeque<Node> dq = new ArrayDeque<Node>();
                     boolean visited[][] = new boolean[N][N];
                     dq.offer(new Node(r, c));
@@ -127,7 +112,7 @@ public class Main {
                             }
                         }
                     }
-                    // System.out.println("num" + num + ", cnt = " + cnt);
+
                     if (cnt != count[num]) {
                         deleteList.add(num);
                         count[num] = 0;
@@ -146,17 +131,11 @@ public class Main {
                 }
             }
         }
-
-        
-        
-        // System.out.println("===putMicro===");
-        // debuging();
     }
 
     public static int[][] moveMicro() {
-        // System.out.println(Arrays.toString(count));
         PriorityQueue<Node> pq = new PriorityQueue<Node>();
-        int newMap[][] = new int[N][N];
+        int newMap[][] = new int[N + 1][N + 1];
 
         for (int i = 1; i <= Q; i++) {
             if (count[i] > 0) {
@@ -166,7 +145,6 @@ public class Main {
 
         while (!pq.isEmpty()) {
             Node node = pq.poll();
-            // System.out.println("pq: " + node.x + ", " + node.y);
 
             int minR = N;
             int minC = N;
@@ -184,69 +162,39 @@ public class Main {
                 }
             }
 
-            // System.out.println("math : " + minR + ", " + minC + ", " + maxR + ", " + maxC);
-
-            int startR = -1;
-            int startC = -1;
             f1: for (int r = 0; r < N; r++) {
                 f2: for (int c = 0; c < N; c++) {
                     if (newMap[r][c] == 0) {
-                        
-                        if (c + maxC - minC + 1 <= N && r + maxR - minR + 1 <= N) {
-                            int x = r;
-                            int y = c;
-                            // System.out.println("math : " + c + ", " + (maxC - minC + 1) + ", " + r + ", " + (maxR - minR + 1));
+                        int[][] copyMap = new int[N + 1][N + 1];
+                        for (int i = 0; i <= N; i++) {
+                            System.arraycopy(newMap[i], 0, copyMap[i], 0, N + 1);
+                        }
+                        boolean end = true;
+                        for (int i = 0; i <= maxR - minR; i++) {
+                            for (int j = 0; j <= maxC - minC; j++) {
+                                if (r + i >= N || c + j >= N) {
+                                    end = false;
+                                    break;
+                                }
+                                if (map[minR + i][minC + j] == node.x) {
+                                    if (copyMap[r + i][c + j] == 0) {
+                                        copyMap[r + i][c + j] = node.x;
+                                    }
+                                    else {
+                                        end = false;
+                                        break;
+                                    }
 
-
-                            for (int i = 0; i < maxC - minC; i++) {
-                                int nx = x + dx[3];
-                                int ny = y + dy[3];
-
-                                if (newMap[nx][ny] != 0) continue f2;
-                                x = nx;
-                                y = ny;
+                                }
                             }
-
-                            x = r;
-                            y = c;
-
-                            for (int i = 0; i < maxR - minR; i++) {
-                                int nx = x + dx[1];
-                                int ny = y + dy[1];
-
-                                if (newMap[nx][ny] != 0) continue f2;
-                                x = nx;
-                                y = ny;
-                            }
-                            
-
-                            
-                            
-                            startR = r;
-                            startC = c;
+                        }
+                        if (end) {
+                            newMap = copyMap;
                             break f1;
                         }
-                        // else break f2;
-                    }
-                }
-                if (r + maxR - minR + 1 >= N) break;
-            }
-            if (startR == -1 && startC == -1) {
-
-                count[node.x] = 0;
-                continue;
-            }
-            else {
-                // System.out.println("start: " + startR + ", " + startC);
-                for (int r = 0; r <= maxR - minR; r++) {
-                    for (int c = 0; c <= maxC - minC; c++) {
-                        if (map[minR + r][minC + c] == node.x) {
-                            newMap[startR + r][startC + c] = node.x;
-                        }
                     }
                 }
             }
-            
         }
 
         return newMap;
@@ -266,7 +214,7 @@ public class Main {
 
                     dq.offer(new Node(r, c));
                     visited[r][c] = true;
-                    
+
                     while (!dq.isEmpty()) {
                         Node node = dq.poll();
                         for (int d = 0; d < 4; d++) {
@@ -281,7 +229,8 @@ public class Main {
                                 if (map[nx][ny] != 0) {
                                     int a = Math.min(n, map[nx][ny]);
                                     int b = Math.max(n, map[nx][ny]);
-                                    hs.add(new Node(a, b));
+                                    if (a != 0 && b != 0)
+                                        hs.add(new Node(a, b));
                                 }
                             }
                         }
@@ -296,7 +245,6 @@ public class Main {
         while (iterator.hasNext()) {
             Node element = iterator.next();
 
-            // System.out.println("!!" + element.x + ", " + element.y);
             result += count[element.x] * count[element.y];
         }
         sb.append(result + "\n");
